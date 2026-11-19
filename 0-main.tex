@@ -1,0 +1,87 @@
+% Contact Nuno Laranjeiro cnl@dei.uc.pt for any feedback, suggestions, or corrections regarding this template.
+
+% How to use this template
+%  1. Fill in the configuration section below.
+%  2. Write your content in frontmatter/ (acknowledgements, abstracts, acronyms, funding, publications),
+%     in text/ (one file per chapter, listed further down in this file) and in references.bib.
+% Do not change frontmatter/0-setup.tex. It defines the layout of the thesis.
+
+
+% ************************************ CONFIGURATION *****************************************
+
+% Thesis type. Possible options are: msc,phd
+\def\thesistype{msc}
+
+% docLanguage is the main language of the document. Possible options are: en,pt
+\def\docLanguage{pt}
+
+% Optional pages. Possible options are: auto,yes,no (auto includes them in PhD theses only)
+\def\fundingPage{auto}        % projects and grants to acknowledge (frontmatter/1-funding.tex)
+\def\publicationsPage{auto}   % publications that resulted from the thesis (frontmatter/4-publications.tex)
+
+\def\thesisAuthor{<Author's name>}
+
+\def\titleEN{<Thesis Title>}
+\def\subtitleEN{<Subtitle (if any)>}
+\def\dateEN{<Month> <20XX>}
+
+\def\titlePT{<Título da Tese>}
+\def\subtitlePT{<Subtítulo (se existir)>}
+\def\datePT{<Mês> <20XX>}
+
+% MSc Theses only - text shown on the cover page and on the title pages
+\def\descMScEN{Dissertation in the context of the <Master in Informatics Engineering>, specialization in <specialization>, advised by Professor <advisor's name> and presented to the Department of Informatics Engineering of the Faculty of Sciences and Technology of the University of Coimbra.}
+\def\descMScPT{Dissertação no âmbito do <Mestrado em Engenharia Informática>, especialização em <nome da especialização se aplicável>, orientada pelo Professor <nome do orientador> e apresentada ao Departamento de Engenharia Informática da Faculdade de Ciências e Tecnologia da Universidade de Coimbra.}
+
+% PhD Theses only - text shown on the cover page
+\def\descPhDEN{Thesis in the context of the <full name of the doctoral program, including branches/areas if applicable>, advised by Professor <full name of the supervisor> and presented at <name of the academic unit>/<name of the department within the academic unit, if applicable>.}
+\def\descPhDPT{Tese no âmbito do <nome completo do doutoramento, incluindo ramos/área se aplicável> orientada pelo/a Professor/a <nome completo do orientador> e apresentada <à nome da unidade orgânica>/<ao nome do departamento, se aplicável da/do nome da unidade orgânica>.}
+
+% PhD Theses only - text shown on the title pages
+\def\titlePageDescPhdEN{PhD Thesis submitted to the University of Coimbra\\Advised by Professor <Supervisor's name>.}
+\def\titlePageDescPhdPT{Tese de Doutoramento submetida à Universidade de Coimbra\\Orientada pelo Professor <Nome do Orientador>.}
+
+% Bibliography style. natbib styles: plainnat, abbrvnat, unsrtnat
+\def\bibStyle{plainnat}
+% For numeric citations, [1] instead of [Author, Year], uncomment the next line
+%\PassOptionsToPackage{numbers}{natbib}
+
+% Statement on the use of artificial intelligence tools
+% >>> ADAPT THIS STATEMENT TO YOUR CASE. DO NOT KEEP THE TEXT BELOW AS IT IS. <<<
+% The tools below are ONLY EXAMPLES. Also declare any other use (which tools, for what, where), such as translation, code or figures.
+\def\aiStatementEN{During the preparation of this document, the author used <names of the tools you used, such as ChatGPT, Gemini or Copilot> to check the grammar and improve the readability of text written by the author. The author takes full responsibility for the content of this document.}
+\def\aiStatementPT{Durante a preparação deste documento, o autor usou <nomes das ferramentas que usou, como o ChatGPT, o Gemini ou o Copilot> para verificar a gramática e melhorar a legibilidade de texto escrito pelo autor. O autor assume total responsabilidade pelo conteúdo deste documento.}
+
+% ********************************** END CONFIGURATION ***************************************
+
+
+\documentclass[twoside, 12pt, a4paper]{book}
+\input{frontmatter/0-setup}   % layout of the thesis (do not change this file)
+\input{frontmatter/5-acronyms}
+
+% Add your own packages here, for example \usepackage{soul}
+
+\begin{document}
+
+%---------------------------------- FRONT MATTER ---------------------------------
+% Fill in the following files in frontmatter/:
+%   2-acknowledgements.tex, 3-abstract-EN.tex, 3-abstract-PT.tex, 5-acronyms.tex
+%   and also 1-funding.tex and 4-publications.tex, if these two pages are included (see the configuration)
+\thesisFrontMatter
+
+\mainmatter
+
+%---------------------------------- MAIN TEXT ------------------------------------
+% One file per chapter in text/, numbered in the order of the chapters. List your chapters here,
+% for example 1-introduction, 2-state-of-the-art, 3-methodology, ..., and the conclusion last
+\input{text/1-introduction}
+\input{text/2-conclusion}
+
+\bibliographystyle{\bibStyle}
+\printReferences{references}
+
+\begin{appendices}
+\input{text/9-appendices}
+\end{appendices}
+
+\end{document}

@@ -1,0 +1,224 @@
+% >>> DO NOT CHANGE THIS FILE. <<<
+% It defines the layout of the thesis: margins, fonts, headers, cover and title pages.
+% Your thesis details go in the configuration section of 0-main.tex, and your own packages go in 0-main.tex too.
+
+\raggedbottom
+
+\usepackage[top=2.5cm,bottom=2.5cm,left=3.5cm,right=2.5cm,headsep=12pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\usepackage{ifthen}
+
+% \bilingual{English}{Portuguese} uses the argument that matches the document language
+\newcommand{\bilingual}[2]{\ifthenelse{\equal{\docLanguage}{en}}{#1}{#2}}
+% \mscOrPhd{MSc}{PhD} uses the argument that matches the thesis type
+\newcommand{\mscOrPhd}[2]{\ifthenelse{\equal{\thesistype}{phd}}{#2}{#1}}
+
+\bilingual{\usepackage[english]{babel}}{\usepackage[portuguese]{babel}}
+
+\usepackage{graphicx}
+\usepackage{caption} % keeps the spacing between captions and figures/tables
+\usepackage[absolute,overlay]{textpos}
+\usepackage{xcolor}
+\usepackage{emptypage}
+\usepackage{setspace}
+\usepackage[page,titletoc,title]{appendix}
+\usepackage[nopostdot]{glossaries} % no full stop after each acronym description
+
+\usepackage[sort&compress,square]{natbib}
+\let\cite\citep % \cite gives [Author, Year] or [1], with the same optional arguments as \citep
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage{notoccite} % citations in captions do not change the numbering of the references
+
+% Remove all paragraph indentation
+\setlength\parindent{0pt}
+
+% Titles that change with the document language
+\bilingual{\newcommand{\acronymsTitle}{Acronyms}}{\newcommand{\acronymsTitle}{Acrónimos}}
+\bilingual{\newcommand{\referencesTitle}{References}}{\newcommand{\referencesTitle}{Referências}}
+
+%---------------------------------- HEADERS ---------------------------------------
+% Numbered chapters: chapter number on even pages, chapter title on odd pages.
+% Unnumbered chapters (contents, lists, references): their title on both pages.
+\usepackage{titlesec} % provides \chaptertitlename (Chapter/Appendix)
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{\chaptertitlename~\thechapter}}
+\renewcommand{\sectionmark}[1]{}
+\fancyhead{}
+\fancyhead[LE]{\sl\nouppercase{\rightmark}}
+\fancyhead[RO]{\sl\nouppercase{\leftmark}}
+
+% \printReferences{bib file} prints the references
+\newcommand{\printReferences}[1]{%
+	\renewcommand{\bibname}{\referencesTitle}%
+	\cleardoublepage
+	\phantomsection
+	\bibliography{#1}%
+	\cleardoublepage
+}
+
+%---------------------------------- COVER AND TITLE PAGES -------------------------
+% Cover colours (background, spine and back cover): MSc ~ Pantone 7753C, PhD ~ Pantone 480C
+\mscOrPhd{\definecolor{cover-background}{cmyk}{0.17 0.27 0.45 0.04}}
+         {\definecolor{cover-background}{cmyk}{0.17 0.26 0.67 0.04}}
+% Marks and typography: ~ Pantone 448C
+\definecolor{cover-foreground}{cmyk}{0.44 0.50 0.68 0.45}
+
+% Texts picked according to language and thesis type
+\newcommand{\thesisTitle}{\bilingual{\titleEN}{\titlePT}}
+\newcommand{\thesisSubtitle}{\bilingual{\subtitleEN}{\subtitlePT}}
+\newcommand{\thesisDate}{\bilingual{\dateEN}{\datePT}}
+\newcommand{\coverDescription}{\bilingual{\mscOrPhd{\descMScEN}{\descPhDEN}}{\mscOrPhd{\descMScPT}{\descPhDPT}}}
+\newcommand{\titlePageDescription}{\bilingual{\mscOrPhd{\descMScEN}{\titlePageDescPhdEN}}{\mscOrPhd{\descMScPT}{\titlePageDescPhdPT}}}
+
+% Layout shared by the cover page and the title pages.
+% \frontPage[text colour command]{margins}{logo}{logo height}{space below logo}{vertical position of the description}{description}
+\newcommand{\frontPage}[7][]{%
+	\newgeometry{#2}
+	\thispagestyle{empty}
+	#1
+
+	\begin{center}
+
+	\begin{figure}[h!]
+		\begin{center}
+		\includegraphics[height=#4]{#3}
+		\end{center}
+	\end{figure}
+
+	\vspace{#5}
+
+	\Large
+	\thesisAuthor
+
+	\vspace{1cm}
+
+	\LARGE
+	\textsc{\textbf{\thesisTitle}}
+
+	\Large
+	\vspace{-0.1cm}
+
+	\textsc{\thesisSubtitle}
+
+	% The description is as wide as the text area and starts at the left margin
+	\begin{textblock*}{\textwidth}(\dimexpr 1in+\oddsidemargin\relax,#6)
+	#1
+	\normalsize
+	\begin{spacing}{1.1}
+	\textbf{#7}
+	\end{spacing}
+	\end{textblock*}
+
+	\large
+	\vspace*{\fill}
+	#1
+	\thesisDate
+
+	\end{center}
+
+	\restoregeometry
+	\color{black}
+}
+
+\newcommand{\coverPage}{%
+	\pagecolor{cover-background}
+	\frontPage[\color{cover-foreground}]{left=2.5cm,right=2.5cm,bottom=4cm,top=5cm}{frontmatter/logo-uc-gold.pdf}{5cm}{2cm}{19.5cm}{\coverDescription}
+	\nopagecolor
+	\cleardoublepage
+}
+
+\newcommand{\titlePageIn}[1]{%
+	\def\docLanguage{#1}
+	\frontPage{left=3.5cm,right=2.5cm,bottom=3.5cm,top=3.5cm}{frontmatter/logo-dei.pdf}{7.5cm}{1cm}{21cm}{\titlePageDescription}
+	\cleardoublepage
+}
+% Title page in both languages, starting with the document language
+\newcommand{\titlePages}{%
+	\bilingual{\titlePageIn{en}\titlePageIn{pt}\def\docLanguage{en}}
+	          {\titlePageIn{pt}\titlePageIn{en}\def\docLanguage{pt}}
+}
+
+%---------------------------------- FRONT MATTER ----------------------------------
+% \ifPage{option}{content} uses the content when the configuration option is yes,
+% or when it is auto and this is a PhD thesis
+\newcommand{\ifPage}[2]{\ifthenelse{\equal{#1}{yes}}{#2}{\ifthenelse{\equal{#1}{auto}}{\mscOrPhd{}{#2}}{}}}
+
+% Statement on the use of AI tools, with the text from the configuration section of 0-main.tex
+\newcommand{\aiDeclarationPage}{%
+	\thispagestyle{empty}
+
+	\begin{center}
+	\vspace*{\fill}
+
+	\bilingual{
+	  {\textsc{Statement on the use of artificial intelligence tools}\par}
+
+	  {\footnotesize
+	\aiStatementEN
+	}
+	}{
+	  {\textsc{Declaração sobre o uso de ferramentas de inteligência artificial}\par}
+
+	  {
+	\footnotesize
+	\aiStatementPT}
+	}
+
+	\vspace*{0pt}
+	\end{center}
+}
+
+% Everything that comes before the first chapter, in this order
+\newcommand{\thesisFrontMatter}{%
+	\setlength{\parskip}{0.7em}
+	\frontmatter
+
+	\coverPage
+	\titlePages
+
+	\ifPage{\fundingPage}{\input{frontmatter/1-funding}\cleardoublepage}
+
+	\input{frontmatter/2-acknowledgements}
+	\newpage
+	\aiDeclarationPage
+	\cleardoublepage
+
+	% Abstract in both languages, starting with the document language
+	\bilingual{\input{frontmatter/3-abstract-EN}\cleardoublepage\input{frontmatter/3-abstract-PT}\cleardoublepage}
+	          {\input{frontmatter/3-abstract-PT}\cleardoublepage\input{frontmatter/3-abstract-EN}\cleardoublepage}
+
+	\ifPage{\publicationsPage}{\input{frontmatter/4-publications}\cleardoublepage}
+
+	% No paragraph spacing in the ToC and other lists
+	\setlength{\parskip}{0em}
+
+	% Make sure acronyms don't appear in the ToC
+	\glsunsetall
+	\tableofcontents
+	\glsresetall
+	\cleardoublepage
+
+	% List of acronyms
+	\glsnogroupskiptrue
+	\printnoidxglossary[type=\acronymtype,style=list,title={\acronymsTitle}, nonumberlist]
+	\cleardoublepage
+
+	\listoffigures
+	\cleardoublepage
+
+	\listoftables
+	\cleardoublepage
+
+	% Paragraph spacing for the main text
+	\setlength{\parskip}{0.7em}
+}
+
+%---------------------------------- ACRONYMS AND PDF ------------------------------
+\makenoidxglossaries
+\usepackage[hidelinks,bookmarks=true]{hyperref}
+% PDF metadata, with the title in the document language
+\hypersetup{pdfauthor={\thesisAuthor}}
+\bilingual{\hypersetup{pdftitle={\titleEN}}}{\hypersetup{pdftitle={\titlePT}}}
